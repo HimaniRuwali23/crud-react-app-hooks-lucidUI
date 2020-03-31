@@ -9,19 +9,18 @@ const EmployeesData = props => {
     currentlySortedFieldDirection,
     setCurrentlySortedFieldDirection
   ] = useState("down");
-  const [data, setData] = useState(props.empData.dtRowData);
-  const [dtColumn, setDtColumn] = useState(props.empData.dtColumnData);
+  const [data, setData] = useState(props.empData);
+  const [dtColumn, setDtColumn] = useState(props.columnData);
 
   const handleSelect = (item, selectedIndex) => {
-    setData(
-      _.map(data, (row, rowIndex) => {
-        if (rowIndex === selectedIndex) {
-          return { ...row, isSelected: !row.isSelected };
-        } else {
-          return row;
-        }
-      })
-    );
+    const updatedData = _.map(data, (row, rowIndex) => {
+      if (rowIndex === selectedIndex) {
+      return { ...row, isSelected: !row.isSelected };
+      } else {
+      return row;
+      }
+      });
+      setData(updatedData);
   };
 
   const handleRowClick = (item, rowIndex) => {
@@ -36,20 +35,21 @@ const EmployeesData = props => {
     const nextData = _.sortBy(data, field);
     setCurrentlySortedField(field);
     setCurrentlySortedFieldDirection(nextCurrentlySortedFieldDirection);
-    setData(
+    const updatedData =
       nextCurrentlySortedFieldDirection === "down"
         ? nextData
-        : _.reverse(nextData)
-    );
+        : _.reverse(nextData);
+    setData(updatedData);
+
     setActiveIndex(null);
   };
 
   const dtData = () => {
-    setData(
+    const updatedData=
       _.map(data, (row, index) =>
         index === activeIndex ? { ...row, isActive: true } : row
-      )
-    );
+      );
+    setData(updatedData);
   };
 
   return (
@@ -65,8 +65,10 @@ const EmployeesData = props => {
         onRowClick={handleRowClick}
         onSort={handleSort}
       >
+
         {dtColumn.map((column, index) => (
           <DataTable.Column
+          key={index}
             field={column.field}
             width={column.width}
             align={column.align}
