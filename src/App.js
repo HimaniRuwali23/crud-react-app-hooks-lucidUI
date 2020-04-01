@@ -8,6 +8,10 @@ const App = () => {
   const [empData, setEmpData] = useState(empList.dtRowData);
   const [columnData, setColumnData] = useState(empList.dtColumnData);
   const [showAddForm, setShowAddForm ]=useState(false);
+  const [editing, setEditing] = useState(false)
+  const initialEmp = {id: null, name: '', designation: '', project:''};
+
+  const [currentEmp, setCurrentEmp] = useState(initialEmp);
 
   const addEmp = emp =>{
     emp.id=empData.length+1;
@@ -16,15 +20,22 @@ const App = () => {
     setShowAddForm(false);
   }
 
+  const editEmp = (id, emp) => {
+    console.log("editEmp", id,emp)
+    setEditing(true);
+    setCurrentEmp(emp);
+  }
+
   const onSubmit=()=>{
     setShowAddForm(true);
   }
 
   return (
-      showAddForm?
-       (<AddEmpForm addEmp={addEmp}/>)
+      showAddForm || editing ?
+       (<AddEmpForm addEmp={addEmp} editMode={editing}  currentUser={currentEmp} />)
        :
-       (<div className="container">
+       (
+         <div className="container">
       <div className="row">
         <h1> List of Employees</h1>
       </div>
@@ -32,7 +43,7 @@ const App = () => {
         <Panel.Header>
           <strong>View Employees</strong>
         </Panel.Header>
-        <EmployeesData empData={empData} columnData={columnData} />
+        <EmployeesData empData={empData} columnData={columnData} editEmp={editEmp} />
         <Panel.Footer>
           <Button type="button" kind="primary" size="large" onClick={onSubmit}>
             Add Employee
@@ -40,7 +51,7 @@ const App = () => {
         </Panel.Footer>
       </Panel>
     </div>
-       )
+    )
     );
 
 };

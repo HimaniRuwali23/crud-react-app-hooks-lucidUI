@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Button, TextField } from 'lucid-ui';
 
 
@@ -9,6 +9,22 @@ const AddEmpForm = (props) => {
     const [project, setProject]=useState("");
 
     const [emp, setEmp] = useState('');
+
+    useEffect(() => {
+        //setEmp(props.currentEmp)
+       console.log("currentEmp", props.currentEmp)
+        const name=props.currentEmp.name;
+        const designation=props.currentEmp.designation;
+        const id=props.currentEmp.id;
+        if(props.editMode){
+        setId(id);
+        setName(name);
+        setDesignation(designation);
+        setProject(project);
+        }
+        
+    }, [props])
+
 
     const handleSubmit = e =>{
         const emp={id,name,designation,project,edit:<Button size="small"> Edit</Button>, delete: <Button size="small"> Delete</Button>};
@@ -45,7 +61,7 @@ const AddEmpForm = (props) => {
                 size="small"
                 type="button"
                 >
-                Add Employee     
+                {props.editMode ? "Update" : "Add Employee" }   
                 </Button>
             
             </form>

@@ -1,16 +1,46 @@
 import React, { useState } from "react";
-import { DataTable } from "lucid-ui";
+import { DataTable,Button } from "lucid-ui";
 import _ from "lodash";
 
 const EmployeesData = props => {
+  const editData= (id, emp)=>{
+    props.editEmp(id, emp);
+  }
+  const empData=[
+    {
+        id: 1,
+        name: 'Avneesh',
+        designation: 'React developer',
+        project:'Appnexus',
+        isSelected: true,
+        edit: <Button size="small"> Edit</Button>,
+        delete: <Button size="small"> Delete</Button>
+       
+    },
+    {
+        id: 2,
+        name: 'Swetansh',
+        designation: 'front end Developer',
+        project:'Xender',
+        edit: <Button size="small" > Edit</Button>,
+        delete: <Button size="small"> Delete</Button>
+    }
+];
   const [activeIndex, setActiveIndex] = useState(1);
   const [currentlySortedField, setCurrentlySortedField] = useState("id");
   const [
     currentlySortedFieldDirection,
     setCurrentlySortedFieldDirection
   ] = useState("down");
-  const [data, setData] = useState(props.empData);
+  const [data, setData] = useState(empData);
   const [dtColumn, setDtColumn] = useState(props.columnData);
+
+  const handleRowClick = (item, rowIndex) => {
+    setActiveIndex(rowIndex);
+    //console.log("handleRow---",item.edit.props.onClick)
+    //item.edit.props.onClick(console.log("handleRow",item.id, item))
+    console.log("handleRow",item.id, item)
+  };
 
   const handleSelect = (item, selectedIndex) => {
     const updatedData = _.map(data, (row, rowIndex) => {
@@ -21,10 +51,6 @@ const EmployeesData = props => {
       }
       });
       setData(updatedData);
-  };
-
-  const handleRowClick = (item, rowIndex) => {
-    setActiveIndex(rowIndex);
   };
 
   const handleSort = field => {
@@ -64,6 +90,7 @@ const EmployeesData = props => {
         isActionable
         onRowClick={handleRowClick}
         onSort={handleSort}
+        
       >
 
         {dtColumn.map((column, index) => (
