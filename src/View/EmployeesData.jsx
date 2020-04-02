@@ -14,17 +14,18 @@ const EmployeesData = props => {
 
   const handleSelect = (item, selectedIndex) => {
     const updatedData = _.map(data, (row, rowIndex) => {
-      if (rowIndex === selectedIndex) {
-      return { ...row, isSelected: !row.isSelected };
+      if (rowIndex === row.selectedIndex) {
+        return { ...row, isSelected: !row.isSelected };
       } else {
-      return row;
+        return row;
       }
-      });
-      setData(updatedData);
+    });
+    setData(updatedData);
   };
 
   const handleRowClick = (item, rowIndex) => {
     setActiveIndex(rowIndex);
+    props.editEmp(item);
   };
 
   const handleSort = field => {
@@ -40,15 +41,13 @@ const EmployeesData = props => {
         ? nextData
         : _.reverse(nextData);
     setData(updatedData);
-
     setActiveIndex(null);
   };
 
   const dtData = () => {
-    const updatedData=
-      _.map(data, (row, index) =>
-        index === activeIndex ? { ...row, isActive: true } : row
-      );
+    const updatedData = _.map(data, (row, index) =>
+      index === activeIndex ? { ...row, isActive: true } : row
+    );
     setData(updatedData);
   };
 
@@ -60,15 +59,14 @@ const EmployeesData = props => {
         onSelect={handleSelect}
         isFullWidth
         minRows={4}
-        isSelectable
+        //isSelectable
         isActionable
         onRowClick={handleRowClick}
         onSort={handleSort}
       >
-
         {dtColumn.map((column, index) => (
           <DataTable.Column
-          key={index}
+            key={index}
             field={column.field}
             width={column.width}
             align={column.align}
@@ -81,7 +79,6 @@ const EmployeesData = props => {
           </DataTable.Column>
         ))}
         <DataTable.Column field="edit" align="center" width={50} />
-        <DataTable.Column field="delete" align="center" width={50} />
       </DataTable>
     </div>
   );
