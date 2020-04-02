@@ -53,7 +53,7 @@ const AddEmpForm = props => {
             size="small"
             type="button"
           >
-            Add Employee
+            {props.editing ? "Update Employee" : "Add Employee"}
           </Button>
         </form>
       </div>
