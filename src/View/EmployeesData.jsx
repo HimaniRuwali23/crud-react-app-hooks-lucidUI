@@ -1,56 +1,31 @@
 import React, { useState } from "react";
-import { DataTable,Button } from "lucid-ui";
+import { DataTable, Button } from "lucid-ui";
 import _ from "lodash";
 
 const EmployeesData = props => {
-  const editData= (id, emp)=>{
-    props.editEmp(id, emp);
-  }
-  const empData=[
-    {
-        id: 1,
-        name: 'Avneesh',
-        designation: 'React developer',
-        project:'Appnexus',
-        isSelected: true,
-        edit: <Button size="small"> Edit</Button>,
-        delete: <Button size="small"> Delete</Button>
-       
-    },
-    {
-        id: 2,
-        name: 'Swetansh',
-        designation: 'front end Developer',
-        project:'Xender',
-        edit: <Button size="small" > Edit</Button>,
-        delete: <Button size="small"> Delete</Button>
-    }
-];
   const [activeIndex, setActiveIndex] = useState(1);
   const [currentlySortedField, setCurrentlySortedField] = useState("id");
   const [
     currentlySortedFieldDirection,
     setCurrentlySortedFieldDirection
   ] = useState("down");
-  const [data, setData] = useState(empData);
+  const [data, setData] = useState(props.empData);
   const [dtColumn, setDtColumn] = useState(props.columnData);
-
-  const handleRowClick = (item, rowIndex) => {
-    setActiveIndex(rowIndex);
-    //console.log("handleRow---",item.edit.props.onClick)
-    //item.edit.props.onClick(console.log("handleRow",item.id, item))
-    console.log("handleRow",item.id, item)
-  };
 
   const handleSelect = (item, selectedIndex) => {
     const updatedData = _.map(data, (row, rowIndex) => {
       if (rowIndex === selectedIndex) {
-      return { ...row, isSelected: !row.isSelected };
+        return { ...row, isSelected: !row.isSelected };
       } else {
-      return row;
+        return row;
       }
-      });
-      setData(updatedData);
+    });
+    setData(updatedData);
+  };
+
+  const handleRowClick = (item, rowIndex) => {
+    setActiveIndex(rowIndex);
+    props.editEmp(item);
   };
 
   const handleSort = field => {
@@ -66,15 +41,13 @@ const EmployeesData = props => {
         ? nextData
         : _.reverse(nextData);
     setData(updatedData);
-
     setActiveIndex(null);
   };
 
   const dtData = () => {
-    const updatedData=
-      _.map(data, (row, index) =>
-        index === activeIndex ? { ...row, isActive: true } : row
-      );
+    const updatedData = _.map(data, (row, index) =>
+      index === activeIndex ? { ...row, isActive: true } : row
+    );
     setData(updatedData);
   };
 
@@ -86,16 +59,14 @@ const EmployeesData = props => {
         onSelect={handleSelect}
         isFullWidth
         minRows={4}
-        isSelectable
+        //isSelectable
         isActionable
         onRowClick={handleRowClick}
         onSort={handleSort}
-        
       >
-
         {dtColumn.map((column, index) => (
           <DataTable.Column
-          key={index}
+            key={index}
             field={column.field}
             width={column.width}
             align={column.align}
@@ -108,7 +79,6 @@ const EmployeesData = props => {
           </DataTable.Column>
         ))}
         <DataTable.Column field="edit" align="center" width={50} />
-        <DataTable.Column field="delete" align="center" width={50} />
       </DataTable>
     </div>
   );
