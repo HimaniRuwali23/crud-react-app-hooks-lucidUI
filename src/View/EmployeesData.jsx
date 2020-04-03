@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DataTable, Button } from "lucid-ui";
 import _ from "lodash";
 
@@ -10,6 +10,15 @@ const EmployeesData = props => {
     setCurrentlySortedFieldDirection
   ] = useState("down");
   const [data, setData] = useState(props.empData);
+
+  useEffect(() => {
+    if (props.deleting) {
+      setData(props.empData);
+    } else {
+      dtData();
+    }
+  }, [props]);
+
   const [dtColumn, setDtColumn] = useState(props.columnData);
 
   const handleSelect = (item, selectedIndex) => {
@@ -46,7 +55,7 @@ const EmployeesData = props => {
 
   const dtData = () => {
     const updatedData = _.map(data, (row, index) =>
-      index === activeIndex ? { ...row, isActive: true } : row
+      index === activeIndex ? { ...row } : row
     );
     setData(updatedData);
   };

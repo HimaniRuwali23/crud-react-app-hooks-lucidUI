@@ -8,14 +8,14 @@ const empList = {
       name: "Avneesh",
       designation: "React developer",
       project: "Appnexus",
-      edit: "Edit"
+      edit: "Edit / Delete"
     },
     {
       id: 2,
       name: "Swetansh",
       designation: "front end Developer",
       project: "Xender",
-      edit: "Edit"
+      edit: "Edit / Delete"
     }
   ],
   dtColumnData: [

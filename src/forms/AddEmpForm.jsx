@@ -17,7 +17,7 @@ const AddEmpForm = props => {
   }, [props]);
 
   const handleSubmit = e => {
-    const emp = { id, name, designation, project, edit: "Edit" };
+    const emp = { id, name, designation, project, edit: "Edit / Delete" };
     if (props.editing) {
       if (emp.name && emp.designation && emp.project) props.updateEmp(emp);
     } else {

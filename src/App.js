@@ -9,9 +9,11 @@ const App = () => {
   const [columnData, setColumnData] = useState(empList.dtColumnData);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const initialUser = { id: null, name: "", designation: "", project: "" };
   const [currentEmp, setCurrentEmp] = useState(initialUser);
   const [editDisabled, setEditDisabled] = useState(true);
+  const [empId, setEmpId] = useState(null);
   const addEmp = emp => {
     const id = empData.length + 1;
     emp = {
@@ -23,6 +25,7 @@ const App = () => {
   };
   const editEmp = emp => {
     setCurrentEmp(emp);
+    setEmpId(emp.id);
     setEditDisabled(false);
   };
 
@@ -33,12 +36,22 @@ const App = () => {
     setEditDisabled(true);
   };
 
+  const deleteEmp = () => {
+    const updateData = empData.filter(data => data.id !== empId);
+    setEmpData(updateData);
+    setShowAddForm(false);
+    setDeleting(true);
+    setEditDisabled(true);
+    return;
+  };
   const onSubmit = () => {
     setShowAddForm(true);
+    setDeleting(false);
   };
 
   const onEdit = () => {
     setEditing(true);
+    setDeleting(false);
   };
 
   return showAddForm || editing ? (
@@ -65,7 +78,12 @@ const App = () => {
             >
               Edit
             </ButtonGroup.Button>
-            <ButtonGroup.Button className="btn" isDisabled={true} size="small">
+            <ButtonGroup.Button
+              className="btn"
+              isDisabled={editDisabled}
+              size="small"
+              onClick={deleteEmp}
+            >
               Delete
             </ButtonGroup.Button>
           </ButtonGroup>
@@ -74,6 +92,7 @@ const App = () => {
           empData={empData}
           columnData={columnData}
           editEmp={editEmp}
+          deleting={deleting}
         />
         <Panel.Footer>
           <Button type="button" kind="primary" size="large" onClick={onSubmit}>
