@@ -9,10 +9,14 @@ const AddEmpForm = props => {
 
   useEffect(() => {
     if (props.editing) {
-      setId(props.currentEmp.id);
-      setName(props.currentEmp.name);
-      setDesignation(props.currentEmp.designation);
-      setProject(props.currentEmp.project);
+      let data = {};
+      props.currentEmp.find(element => {
+        data = element;
+      });
+      setId(data.id);
+      setName(data.name);
+      setDesignation(data.designation);
+      setProject(data.project);
     }
   }, [props]);
 

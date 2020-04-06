@@ -3,6 +3,7 @@ import empList from "./data.js";
 import EmployeesData from "./View/EmployeesData";
 import AddEmpForm from "./forms/AddEmpForm";
 import { Button, Panel, ButtonGroup } from "lucid-ui";
+import _ from "lodash";
 
 const App = () => {
   const [empData, setEmpData] = useState(empList.dtRowData);
@@ -10,8 +11,8 @@ const App = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editing, setEditing] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const initialUser = { id: null, name: "", designation: "", project: "" };
-  const [currentEmp, setCurrentEmp] = useState(initialUser);
+  const initialUser = [{ id: null, name: "", designation: "", project: "" }];
+  const [currentEmp, setCurrentEmp] = useState([]);
   const [editDisabled, setEditDisabled] = useState(true);
   const [empId, setEmpId] = useState(null);
   const addEmp = emp => {
@@ -24,7 +25,8 @@ const App = () => {
     setShowAddForm(false);
   };
   const editEmp = emp => {
-    setCurrentEmp(emp);
+    currentEmp.push(emp);
+    setCurrentEmp([...currentEmp]);
     setEmpId(emp.id);
     setEditDisabled(false);
   };
@@ -42,7 +44,6 @@ const App = () => {
     setShowAddForm(false);
     setDeleting(true);
     setEditDisabled(true);
-    return;
   };
   const onSubmit = () => {
     setShowAddForm(true);

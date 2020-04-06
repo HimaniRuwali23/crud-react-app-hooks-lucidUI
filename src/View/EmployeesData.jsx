@@ -30,11 +30,14 @@ const EmployeesData = props => {
       }
     });
     setData(updatedData);
+    //setData(item);
+    if (!item.isSelected) {
+      props.editEmp(item);
+    }
   };
 
   const handleRowClick = (item, rowIndex) => {
     setActiveIndex(rowIndex);
-    props.editEmp(item);
   };
 
   const handleSort = field => {
@@ -68,7 +71,7 @@ const EmployeesData = props => {
         onSelect={handleSelect}
         isFullWidth
         minRows={4}
-        //isSelectable
+        isSelectable
         isActionable
         onRowClick={handleRowClick}
         onSort={handleSort}
