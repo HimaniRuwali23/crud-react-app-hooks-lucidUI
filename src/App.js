@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import empList from "./data.js";
 import EmployeesData from "./View/EmployeesData";
 import AddEmpForm from "./forms/AddEmpForm";
+import EditEmpForm from "./forms/EditEmpForm";
 import { Button, Panel, ButtonGroup } from "lucid-ui";
 import _ from "lodash";
 
@@ -15,31 +16,31 @@ const App = () => {
   const [currentEmp, setCurrentEmp] = useState([]);
   const [editDisabled, setEditDisabled] = useState(true);
   const [empId, setEmpId] = useState(null);
-  const addEmp = emp => {
+  const addEmp = (emp) => {
     const id = empData.length + 1;
     emp = {
       ...emp,
-      id: id
+      id: id,
     };
     setEmpData([...empData, emp]);
     setShowAddForm(false);
   };
-  const editEmp = emp => {
+  const editEmp = (emp) => {
     currentEmp.push(emp);
     setCurrentEmp([...currentEmp]);
     setEmpId(emp.id);
     setEditDisabled(false);
   };
 
-  const updateEmp = newEmp => {
-    setEmpData(empData.map(emp => (emp.id === currentEmp.id ? newEmp : emp)));
+  const updateEmp = (newEmp) => {
+    setEmpData(empData.map((emp) => (emp.id === currentEmp.id ? newEmp : emp)));
     setShowAddForm(false);
     setEditing(false);
     setEditDisabled(true);
   };
 
   const deleteEmp = () => {
-    const updateData = empData.filter(data => data.id !== empId);
+    const updateData = empData.filter((data) => data.id !== empId);
     setEmpData(updateData);
     setShowAddForm(false);
     setDeleting(true);
@@ -55,9 +56,15 @@ const App = () => {
     setDeleting(false);
   };
 
-  return showAddForm || editing ? (
+  return showAddForm ? (
     <AddEmpForm
       addEmp={addEmp}
+      // currentEmp={currentEmp}
+      // editing={editing}
+      // updateEmp={updateEmp}
+    />
+  ) : editing ? (
+    <EditEmpForm
       currentEmp={currentEmp}
       editing={editing}
       updateEmp={updateEmp}
