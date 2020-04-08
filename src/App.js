@@ -33,7 +33,11 @@ const App = () => {
   };
 
   const updateEmp = (newEmp) => {
-    setEmpData(empData.map((emp) => (emp.id === currentEmp.id ? newEmp : emp)));
+    let data = {};
+    currentEmp.find((element) => {
+      data = element;
+    });
+    setEmpData(empData.map((emp) => (emp.id === data.id ? newEmp : emp)));
     setShowAddForm(false);
     setEditing(false);
     setEditDisabled(true);
@@ -57,12 +61,7 @@ const App = () => {
   };
 
   return showAddForm ? (
-    <AddEmpForm
-      addEmp={addEmp}
-      // currentEmp={currentEmp}
-      // editing={editing}
-      // updateEmp={updateEmp}
-    />
+    <AddEmpForm addEmp={addEmp} />
   ) : editing ? (
     <EditEmpForm
       currentEmp={currentEmp}

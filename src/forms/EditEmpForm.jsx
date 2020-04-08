@@ -9,6 +9,7 @@ const EditEmpForm = (props) => {
   const [project, setProject] = useState("");
   const [isShown, setIsShown] = useState(false);
   const [emp, setEmp] = useState([]);
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const { Thead, Tbody, Tr, Th, Td } = Table;
 
@@ -23,23 +24,28 @@ const EditEmpForm = (props) => {
       setDesignation(data.designation);
       setProject(data.project);
       setIsShown(true);
-      let empData = [];
       props.currentEmp.map((element) => {
-        empData = element;
-
-        emp.push(empData);
-        setEmp([...emp]);
+        emp.push(element);
       });
+      setEmp([...emp]);
     }
   }, [props]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (dt) => {
+    const updateData = emp.filter((dat) => dat.id === dt.id);
+    let data = {};
+    updateData.find((element) => {
+      data = element;
+    });
+    props.updateEmp(data);
+  };
+
+  const handleChange = (value, index) => {
+    setIsDisabled(false);
+    const name = value;
+    setName(value);
     const data = { id, name, designation, project };
-    emp.push(data);
-    setEmp(...emp);
-    if (props.editing) {
-      //props.updateEmp(emp);
-    }
+    setEmp(emp.map((empDt) => (empDt.id === data.id ? data : empDt)));
   };
 
   const handleShow = (isShown) => {
@@ -66,41 +72,42 @@ const EditEmpForm = (props) => {
               </Tr>
             </Thead>
             <Tbody>
-              {props.currentEmp.map((emp, index) => (
+              {emp.map((dt, index) => (
                 <Tr key={index}>
                   <Td>
                     <TextField
                       placeholder="Employee Name"
-                      value={emp.name}
-                      onChange={(value) => setName(emp.name)}
+                      value={dt.name}
+                      onChange={(value) => handleChange(value, index)}
                     />
                   </Td>
                   <Td>
                     <TextField
                       placeholder="Employee Designation"
-                      value={emp.designation}
-                      onChange={(value) => setDesignation(emp.designation)}
+                      value={dt.designation}
+                      onChange={(value) => setDesignation(dt.designation)}
                     />
                   </Td>
                   <Td>
                     <TextField
                       placeholder="Employee Project"
-                      value={emp.project}
-                      onChange={(value) => setProject(emp.project)}
+                      value={dt.project}
+                      onChange={(value) => setProject(dt.project)}
                     />
+                  </Td>
+                  <Td>
+                    <Button
+                      size="small"
+                      isDisabled={isDisabled}
+                      onClick={() => handleSubmit(dt)}
+                    >
+                      Update
+                    </Button>
                   </Td>
                 </Tr>
               ))}
             </Tbody>
           </Table>
-          <Button
-            onClick={handleSubmit}
-            kind="primary"
-            size="small"
-            type="button"
-          >
-            Update
-          </Button>
         </Dialog>
       </div>
     </div>

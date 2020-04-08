@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, TextField } from "lucid-ui";
 
-const AddEmpForm = props => {
+const AddEmpForm = (props) => {
   const [id, setId] = useState(null);
   const [name, setName] = useState("");
   const [designation, setDesignation] = useState("");
@@ -10,7 +10,7 @@ const AddEmpForm = props => {
   useEffect(() => {
     if (props.editing) {
       let data = {};
-      props.currentEmp.find(element => {
+      props.currentEmp.find((element) => {
         data = element;
       });
       setId(data.id);
@@ -20,7 +20,7 @@ const AddEmpForm = props => {
     }
   }, [props]);
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     const emp = { id, name, designation, project, edit: "Edit / Delete" };
     if (props.editing) {
       if (emp.name && emp.designation && emp.project) props.updateEmp(emp);
@@ -37,19 +37,19 @@ const AddEmpForm = props => {
           <TextField
             placeholder="Employee Name"
             value={name}
-            onChange={value => setName(value)}
+            onChange={(value) => setName(value)}
           />
           <label>Employee Designation</label>
           <TextField
             placeholder="Employee Designation"
             value={designation}
-            onChange={value => setDesignation(value)}
+            onChange={(value) => setDesignation(value)}
           />
           <label>Employee Project</label>
           <TextField
             placeholder="Employee Project"
             value={project}
-            onChange={value => setProject(value)}
+            onChange={(value) => setProject(value)}
           />
           <Button
             onClick={handleSubmit}

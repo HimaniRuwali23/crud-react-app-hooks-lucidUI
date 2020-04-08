@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { DataTable, Button } from "lucid-ui";
 import _ from "lodash";
 
-const EmployeesData = props => {
+const EmployeesData = (props) => {
   const [activeIndex, setActiveIndex] = useState(1);
   const [currentlySortedField, setCurrentlySortedField] = useState("id");
   const [
     currentlySortedFieldDirection,
-    setCurrentlySortedFieldDirection
+    setCurrentlySortedFieldDirection,
   ] = useState("down");
   const [data, setData] = useState(props.empData);
 
@@ -30,7 +30,6 @@ const EmployeesData = props => {
       }
     });
     setData(updatedData);
-    //setData(item);
     if (!item.isSelected) {
       props.editEmp(item);
     }
@@ -40,7 +39,7 @@ const EmployeesData = props => {
     setActiveIndex(rowIndex);
   };
 
-  const handleSort = field => {
+  const handleSort = (field) => {
     const nextCurrentlySortedFieldDirection =
       currentlySortedField === field && currentlySortedFieldDirection === "up"
         ? "down"
@@ -90,7 +89,6 @@ const EmployeesData = props => {
             {column.title}
           </DataTable.Column>
         ))}
-        <DataTable.Column field="edit" align="center" width={50} />
       </DataTable>
     </div>
   );
