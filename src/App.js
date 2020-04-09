@@ -11,6 +11,7 @@ const App = () => {
   const [columnData, setColumnData] = useState(empList.dtColumnData);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [isShown, setIsShown] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const initialUser = [{ id: null, name: "", designation: "", project: "" }];
   const [currentEmp, setCurrentEmp] = useState([]);
@@ -26,28 +27,35 @@ const App = () => {
     setShowAddForm(false);
   };
   const editEmp = (emp) => {
-    currentEmp.push(emp);
-    setCurrentEmp([...currentEmp]);
+    setCurrentEmp(emp);
     setEmpId(emp.id);
     setEditDisabled(false);
   };
 
+  const editAllEmp = (emp) => {
+    setCurrentEmp(emp);
+    setEditDisabled(false);
+  };
+
   const updateEmp = (newEmp) => {
-    let data = {};
-    currentEmp.find((element) => {
-      data = element;
-    });
-    setEmpData(empData.map((emp) => (emp.id === data.id ? newEmp : emp)));
+    setEmpData(newEmp);
     setShowAddForm(false);
     setEditing(false);
     setEditDisabled(true);
   };
 
-  const deleteEmp = () => {
-    const updateData = empData.filter((data) => data.id !== empId);
-    setEmpData(updateData);
+  const deleteEmp = (newEmp) => {
+    setEmpData(newEmp);
     setShowAddForm(false);
-    setDeleting(true);
+    setDeleting(false);
+    setEditDisabled(true);
+  };
+
+  const handleShow = (isShown) => {
+    setIsShown(isShown);
+    setShowAddForm(false);
+    setEditing(false);
+    setDeleting(false);
     setEditDisabled(true);
   };
   const onSubmit = () => {
@@ -58,15 +66,26 @@ const App = () => {
   const onEdit = () => {
     setEditing(true);
     setDeleting(false);
+    setIsShown(true);
+  };
+
+  const onDelete = () => {
+    setIsShown(true);
+    setEditing(false);
+    setDeleting(true);
   };
 
   return showAddForm ? (
     <AddEmpForm addEmp={addEmp} />
-  ) : editing ? (
+  ) : editing || deleting ? (
     <EditEmpForm
       currentEmp={currentEmp}
       editing={editing}
       updateEmp={updateEmp}
+      deleting={deleting}
+      deleteEmp={deleteEmp}
+      handleClose={_.partial(handleShow, !isShown)}
+      isShown={isShown}
     />
   ) : (
     <div className="container">
@@ -89,7 +108,7 @@ const App = () => {
               className="btn"
               isDisabled={editDisabled}
               size="small"
-              onClick={deleteEmp}
+              onClick={onDelete}
             >
               Delete
             </ButtonGroup.Button>
@@ -99,7 +118,9 @@ const App = () => {
           empData={empData}
           columnData={columnData}
           editEmp={editEmp}
+          editAllEmp={editAllEmp}
           deleting={deleting}
+          deleteEmp={deleteEmp}
         />
         <Panel.Footer>
           <Button type="button" kind="primary" size="large" onClick={onSubmit}>

@@ -34,6 +34,19 @@ const EmployeesData = (props) => {
       props.editEmp(item);
     }
   };
+  const handleSelectAll = () => {
+    const allSelected = _.every(data, "isSelected");
+    const updatedData = _.map(data, (row) => {
+      return {
+        ...row,
+        isSelected: !allSelected,
+      };
+    });
+    setData(updatedData);
+    if (!allSelected) {
+      props.editAllEmp(data);
+    }
+  };
 
   const handleRowClick = (item, rowIndex) => {
     setActiveIndex(rowIndex);
@@ -67,12 +80,13 @@ const EmployeesData = (props) => {
       <DataTable
         data={data}
         density="extended"
-        onSelect={handleSelect}
         isFullWidth
         minRows={4}
         isSelectable
         isActionable
         onRowClick={handleRowClick}
+        //onSelect={handleSelect}
+        onSelectAll={handleSelectAll}
         onSort={handleSort}
       >
         {dtColumn.map((column, index) => (

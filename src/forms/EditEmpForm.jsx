@@ -7,15 +7,15 @@ const EditEmpForm = (props) => {
   const [name, setName] = useState("");
   const [designation, setDesignation] = useState("");
   const [project, setProject] = useState("");
-  const [isShown, setIsShown] = useState(false);
+
   const [emp, setEmp] = useState([]);
   const [isDisabled, setIsDisabled] = useState(true);
 
   const { Thead, Tbody, Tr, Th, Td } = Table;
 
   useEffect(() => {
-    if (props.editing) {
-      let data = {};
+    let data = {};
+    if (props.editing || props.deleting) {
       props.currentEmp.find((element) => {
         data = element;
       });
@@ -23,7 +23,6 @@ const EditEmpForm = (props) => {
       setName(data.name);
       setDesignation(data.designation);
       setProject(data.project);
-      setIsShown(true);
       props.currentEmp.map((element) => {
         emp.push(element);
       });
@@ -31,25 +30,57 @@ const EditEmpForm = (props) => {
     }
   }, [props]);
 
-  const handleSubmit = (dt) => {
-    const updateData = emp.filter((dat) => dat.id === dt.id);
-    let data = {};
-    updateData.find((element) => {
-      data = element;
-    });
-    props.updateEmp(data);
+  const handleSubmit = () => {
+    if (props.editing) {
+      props.updateEmp(emp);
+    }
+    if (props.deleting) {
+      const emp = [{ id: "", name: "", designation: "", project: "" }];
+      setEmp([...emp]);
+      props.deleteEmp(emp);
+    }
   };
 
-  const handleChange = (value, index) => {
-    setIsDisabled(false);
+  const onNameChange = (value, id) => {
     const name = value;
-    setName(value);
-    const data = { id, name, designation, project };
-    setEmp(emp.map((empDt) => (empDt.id === data.id ? data : empDt)));
+    setEmp((currentEmp) =>
+      currentEmp.map((x) =>
+        x.id === id
+          ? {
+              ...x,
+              name,
+            }
+          : x
+      )
+    );
   };
 
-  const handleShow = (isShown) => {
-    setIsShown(isShown);
+  const onDesigChange = (value, id) => {
+    const designation = value;
+    setEmp((currentEmp) =>
+      currentEmp.map((x) =>
+        x.id === id
+          ? {
+              ...x,
+              designation,
+            }
+          : x
+      )
+    );
+  };
+
+  const onProjectChange = (value, id) => {
+    const project = value;
+    setEmp((currentEmp) =>
+      currentEmp.map((x) =>
+        x.id === id
+          ? {
+              ...x,
+              project,
+            }
+          : x
+      )
+    );
   };
 
   return (
@@ -57,8 +88,8 @@ const EditEmpForm = (props) => {
       <div className="row">
         <Dialog
           isComplex
-          isShown={isShown}
-          handleClose={_.partial(handleShow, !isShown)}
+          isShown={props.isShown}
+          handleClose={props.handleClose}
           Header="Edit Employee Data"
           size="medium"
           height={500}
@@ -72,40 +103,48 @@ const EditEmpForm = (props) => {
               </Tr>
             </Thead>
             <Tbody>
-              {emp.map((dt, index) => (
-                <Tr key={index}>
+              {emp.map((dt) => (
+                <Tr key={dt.id}>
                   <Td>
                     <TextField
                       placeholder="Employee Name"
                       value={dt.name}
-                      onChange={(value) => handleChange(value, index)}
+                      onChange={(value) => {
+                        onNameChange(value, dt.id);
+                      }}
                     />
                   </Td>
                   <Td>
                     <TextField
                       placeholder="Employee Designation"
                       value={dt.designation}
-                      onChange={(value) => setDesignation(dt.designation)}
+                      onChange={(value) => {
+                        onDesigChange(value, dt.id);
+                      }}
                     />
                   </Td>
                   <Td>
                     <TextField
                       placeholder="Employee Project"
                       value={dt.project}
-                      onChange={(value) => setProject(dt.project)}
+                      onChange={(value) => {
+                        onProjectChange(value, dt.id);
+                      }}
                     />
-                  </Td>
-                  <Td>
-                    <Button
-                      size="small"
-                      isDisabled={isDisabled}
-                      onClick={() => handleSubmit(dt)}
-                    >
-                      Update
-                    </Button>
                   </Td>
                 </Tr>
               ))}
+              <Tr>
+                <Td>
+                  <Button
+                    size="small"
+                    isDisabled={false}
+                    onClick={handleSubmit}
+                  >
+                    {props.editing ? "Update" : "Delete"}
+                  </Button>
+                </Td>
+              </Tr>
             </Tbody>
           </Table>
         </Dialog>
